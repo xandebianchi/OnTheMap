@@ -12,9 +12,15 @@ class UdacityClient {
     enum Endpoints {
         static let base = "https://onthemap-api.udacity.com/v1"
         
+        struct Auth {
+            static var uniqueKey = ""
+        }
+        
         case getUdacitySignUpPage
         case login
         case getStudentLocations
+        case postStudentLocation
+        case getPublicUserData
         
         var stringValue: String {
             switch self {
@@ -24,6 +30,10 @@ class UdacityClient {
                 return Endpoints.base + "/session"
             case .getStudentLocations:
                 return Endpoints.base + "/StudentLocation?limit=100&order=-updatedAt"
+            case .postStudentLocation:
+                return Endpoints.base + "/StudentLocation"
+            case .getPublicUserData:
+                return Endpoints.base + "/users/\(Auth.uniqueKey)"
             }
         }
         
@@ -44,6 +54,7 @@ class UdacityClient {
                 return
             }
             let decoder = JSONDecoder()
+            print(String(data: data, encoding: .utf8))
             do {
                 let responseObject = try decoder.decode(ResponseType.self, from: data)
                 DispatchQueue.main.async {
@@ -97,6 +108,7 @@ class UdacityClient {
     class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
         taskForPOSTRequest(url: Endpoints.login.url, responseType: LoginResponse.self, body: LoginRequest(username: username, password: password)) { (response, error) in
             if let response = response {
+                Endpoints.Auth.uniqueKey = response.account.key
                 completion(response.account.registered, nil)
             } else {
                 completion(false, error)
@@ -110,6 +122,26 @@ class UdacityClient {
                 completion(response.results, nil)
             } else {
                 completion([], error)
+            }
+        }
+    }
+    
+    class func postStudentLocation(firstName: String, lastName: String, mapString: String, mediaURL: String, latitude: Float, longitude: Float, completion: @escaping (Bool, Error?) -> Void) {
+        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, responseType: PostLocationResponse.self, body: PostLocationRequest(uniqueKey: Endpoints.Auth.uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longituede: longitude)) { (response, error) in
+            if let response = response {
+                completion(true, nil)
+            } else {
+                completion(false, error)
+            }
+        }
+    }
+    
+    class func getPublicUserData(completion: @escaping (String?, String?, Error?) -> Void) {
+        taskForGETRequest(url: Endpoints.getPublicUserData.url, response: UserDataResponse.self) { (response, error) in
+            if let response = response {
+                completion(response.user.firstName, response.user.lastName, nil)
+            } else {
+                completion(nil, nil, error)
             }
         }
     }

@@ -10,5 +10,16 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "MapViewController.showMapAnnotations(_:):MapViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "location.latitude as! Double)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in static UdacityClient.getStudentLocations(completion:):UdacityClient.swift">
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

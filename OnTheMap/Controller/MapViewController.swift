@@ -22,20 +22,25 @@ import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
-    // The map. See the setup in the Storyboard file. Note particularly that the view controller
-    // is set up as the map view's delegate.
     @IBOutlet weak var mapView: MKMapView!
-        
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
+    
+    // Add it to the studentLocations array in the Application Delegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // The "locations" array is an array of dictionary objects that are similar to the JSON
-        // data that you can download from parse.
         UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))//hardCodedLocationData()
     }
     
     func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
-        if error != nil {
+        refreshButton.isEnabled = true
+        
+        if error == nil {
+            if self.mapView.annotations.count > 0 {
+                self.mapView.removeAnnotations(self.mapView.annotations)
+            }
+            appDelegate.studentLocations = locations
             showMapAnnotations(locations)
         } else {
             //showLoginFailure(message: error?.localizedDescription ?? "")
@@ -45,18 +50,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func showMapAnnotations(_ locations: [StudentLocation]) {
         // We will create an MKPointAnnotation for each dictionary in "locations". The
         // point annotations will be stored in this array, and then provided to the map view.
+        // TODO Change explanation
         var annotations = [MKPointAnnotation]()
-        
-        // The "locations" array is loaded with the sample data below. We are using the dictionaries
-        // to create map annotations. This would be more stylish if the dictionaries were being
-        // used to create custom structs. Perhaps StudentLocation structs.
-        
+               
         for location in locations {
-            
             // Notice that the float values are being used to create CLLocationDegree values.
             // This is a version of the Double type.
-            let latitude = CLLocationDegrees(location.latitude as! Double)
-            let longitude = CLLocationDegrees(location.longitude as! Double)
+            let latitude = CLLocationDegrees(location.latitude)
+            let longitude = CLLocationDegrees(location.longitude)
             
             // The lat and long are used to create a CLLocationCoordinates2D instance.
             let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -102,7 +103,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         return pinView
     }
-
     
     // This delegate method is implemented to respond to taps. It opens the system browser
     // to the URL specified in the annotationViews subtitle property.
@@ -114,11 +114,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-//    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//
-//        if control == annotationView.rightCalloutAccessoryView {
-//            let app = UIApplication.sharedApplication()
-//            app.openURL(NSURL(string: annotationView.annotation.subtitle))
-//        }
-//    }
+    
+    @IBAction func refreshButtonAction(_ sender: Any) {
+        refreshButton.isEnabled = false
+        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
+    }
+    
+    
+    @IBAction func addLocationButtonAction(_ sender: Any) {
+        let informationPostingViewController = storyboard?.instantiateViewController(withIdentifier: "InformationPostingViewController") as! InformationPostingViewController
+        present(informationPostingViewController, animated: true, completion: nil)
+    }
+    
 }
