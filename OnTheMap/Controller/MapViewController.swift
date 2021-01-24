@@ -30,7 +30,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))//hardCodedLocationData()
+        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
     }
     
     func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
@@ -86,7 +86,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
     // method in TableViewDataSource.
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let reuseId = "pin"
         
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView

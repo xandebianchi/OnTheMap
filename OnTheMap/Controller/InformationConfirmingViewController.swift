@@ -23,18 +23,17 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        UIView.animate(withDuration: 1.0, delay: 0, options: [.repeat, .autoreverse], animations: {
-            self.mapView.alpha = 0.0
-        }) { _ in
+        self.mapView.alpha = 0.0
+        UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
             self.mapView.alpha = 1.0
-        }
+        })
     }
     
     func showMapAnnotation() {
         // We will create an MKPointAnnotation for each dictionary in "locations". The
         // point annotations will be stored in this array, and then provided to the map view.
         // TODO Change explanation
-        var annotations = [MKPointAnnotation]()
+        //var annotations = [MKPointAnnotation]()
                
         let latitude = CLLocationDegrees(self.latitude)
         let longitude = CLLocationDegrees(self.longitude)
@@ -53,10 +52,10 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
         //annotation.subtitle = mediaURL
         
         // Finally we place the annotation in an array of annotations.
-        annotations.append(annotation)
+       // annotations.append(annotation)
         
         // When the array is complete, we add the annotations to the map.
-        mapView.addAnnotations(annotations)
+        mapView.addAnnotation(annotation)
         
         mapView.selectAnnotation(annotation, animated: true)
     }
@@ -67,7 +66,6 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
     // method in TableViewDataSource.
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let reuseId = "pin"
         
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
@@ -96,7 +94,6 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
             // Handle error
         }
     }
-    
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
         if success {

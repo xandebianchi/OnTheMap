@@ -14,8 +14,8 @@ struct UserDataResponse: Codable {
 
 // MARK: - User
 struct User: Codable {
-    let firstName: String
-    let lastName: String
+    let firstName: String?
+    let lastName: String?
 
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
