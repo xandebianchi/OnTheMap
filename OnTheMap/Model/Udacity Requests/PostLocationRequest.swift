@@ -14,5 +14,5 @@ struct PostLocationRequest: Codable {
     let mapString: String
     let mediaURL: String
     let latitude: Float
-    let longituede: Float
+    let longitude: Float
 }

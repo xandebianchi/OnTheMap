@@ -398,10 +398,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="7dz-A4-SDh">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7dz-A4-SDh">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <connections>
-                                    <outlet property="delegate" destination="vxj-Pd-Kby" id="N24-Te-y2i"/>
+                                    <outlet property="delegate" destination="mHH-uK-hYt" id="Afe-OA-9IH"/>
                                 </connections>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2OF-l4-n8Y">
@@ -416,6 +416,7 @@
                                 </state>
                                 <connections>
                                     <action selector="finishButtonAction:" destination="vxj-Pd-Kby" eventType="touchUpInside" id="H9g-g6-PFj"/>
+                                    <action selector="finishButtonAction:" destination="mHH-uK-hYt" eventType="touchUpInside" id="W17-lu-Eg2"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -432,7 +433,7 @@
                     </view>
                     <connections>
                         <outlet property="finishButton" destination="2OF-l4-n8Y" id="Cac-pA-USY"/>
-                        <outlet property="mapView" destination="7dz-A4-SDh" id="kel-Mh-bzm"/>
+                        <outlet property="mapView" destination="7dz-A4-SDh" id="uin-lC-isF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ewS-Vn-Sy7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -441,7 +442,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="1e4-Jg-5Rk"/>
+        <segue reference="3zw-t1-RLE"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="icon_addpin" width="24" height="24"/>
