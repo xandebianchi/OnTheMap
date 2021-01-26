@@ -35,7 +35,7 @@ class LoginViewController: UIViewController {
         if success {
             self.performSegue(withIdentifier: "completeLogin", sender: nil)
         } else {
-            showLoginFailure(message: error?.localizedDescription ?? "")
+            showFailure(title: "Login Failed", message: error?.localizedDescription ?? "")
         }
     }
     
@@ -50,10 +50,10 @@ class LoginViewController: UIViewController {
         loginButton.isEnabled = !loggingIn
     }
     
-    func showLoginFailure(message: String) {
-        let alertVC = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
+    func showFailure(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
 }

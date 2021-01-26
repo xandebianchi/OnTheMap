@@ -20,26 +20,29 @@ class InformationPostingViewController: UIViewController {
     var latitude: Float = 0.0
     var longitude: Float = 0.0
     
+    override func viewDidLoad() {
+        locationTextField.becomeFirstResponder()
+    }
+    
     @IBAction func findLocationButtonAction(_ sender: Any) {
-        //threatUIErrors()
-        setIndicator(true)
-        geocoder.geocodeAddressString(locationTextField.text ?? "") { (placemarks, error) in
-            self.processResponse(withPlacemarks: placemarks, error: error)
+        if locationTextField.text!.isEmpty || urlTextField.text!.isEmpty {
+            showFailure(title: "Information Missing", message: "Please fill the location and the link or information associated.")
+        } else {
+            setIndicator(true)
+            geocoder.geocodeAddressString(locationTextField.text ?? "") { (placemarks, error) in
+                self.processResponse(withPlacemarks: placemarks, error: error)
+            }
         }
     }
         
     private func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
         if let error = error {
-            print("Unable to Forward Geocode Address (\(error))")
-            // TODO Handle error
+            setIndicator(false)
+            showFailure(title: "Location Do Not Exist", message: "The informed location doesn't exist.")
         } else {
-            var location: CLLocation?
-
             if let placemarks = placemarks, placemarks.count > 0 {
-                location = placemarks.first?.location
-            }
+                let location = placemarks.first?.location as! CLLocation
 
-            if let location = location {
                 let coordinate = location.coordinate
                 
                 self.latitude = Float(coordinate.latitude)
@@ -51,8 +54,7 @@ class InformationPostingViewController: UIViewController {
                 performSegue(withIdentifier: "goToConfirmingSegue", sender: self)
             } else {
                 setIndicator(false)
-                
-                print("No Matching Location Found")
+                showFailure(title: "Location Not Well Specified", message: "Try to use the full location name (Ex: California, USA).")
             }
         }
     }
@@ -74,7 +76,10 @@ class InformationPostingViewController: UIViewController {
         informationConfirmingViewController.mediaURL = self.urlTextField.text!
     }
                 
-    //func threatUIErrors() {
-    //}
+    func showFailure(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
     
 }

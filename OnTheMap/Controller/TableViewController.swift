@@ -18,41 +18,7 @@ class TableViewController: UITableViewController {
     
     // Add it to the studentLocations array in the Application Delegate
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        if (appDelegate.studentLocations.isEmpty) {
-//            UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))//hardCodedLocationData()
-//        }
-//    }
         
-    func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
-        refreshButton.isEnabled = true
-        
-        if error == nil {
-            appDelegate.studentLocations = locations
-            self.tableView.reloadData()
-        } else {
-            //showLoginFailure(message: error?.localizedDescription ?? "")
-        }
-    }
-    
-//    // MARK: - Life Cycle
-//
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(true)
-//        tableView.reloadData() // Reload data after view appears
-//    }
-    
-    // MARK: - Table View Methods
-    
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let controller = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
-//        controller.memedImage = memes[(indexPath as NSIndexPath).row].memedImage
-//        self.navigationController!.pushViewController(controller, animated: true)
-//    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of prompts in the storyNode (The 2 is just a place holder)
         return appDelegate.studentLocations.count
@@ -84,7 +50,7 @@ class TableViewController: UITableViewController {
         if success {
             self.dismiss(animated: true, completion: nil)
         } else {
-            showLogoutFailure(message: "It was not possible to do logout!")
+            showFailure(title: "Logout Failed", message: "It was not possible to do logout!")
         }
     }
     
@@ -93,10 +59,21 @@ class TableViewController: UITableViewController {
         UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
     }
     
-    func showLogoutFailure(message: String) {
-        let alertVC = UIAlertController(title: "Logout Failed", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
+    func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
+        refreshButton.isEnabled = true
+        
+        if error == nil {
+            appDelegate.studentLocations = locations
+            self.tableView.reloadData()
+        } else {
+            showFailure(title: "Get Student Locations Failed", message: error?.localizedDescription ?? "")
+        }
+    }
+    
+    func showFailure(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
 
 }

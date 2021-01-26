@@ -43,7 +43,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             appDelegate.studentLocations = locations
             showMapAnnotations(locations)
         } else {
-            //showLoginFailure(message: error?.localizedDescription ?? "")
+            showFailure(title: "Get Student Locations Failed", message: error?.localizedDescription ?? "")
         }
     }
     
@@ -122,7 +122,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if success {
             self.dismiss(animated: true, completion: nil)
         } else {
-            showLogoutFailure(message: "It was not possible to do logout!")
+            showFailure(title: "Logout Failed", message: "It was not possible to do logout!")
         }
     }
     
@@ -136,10 +136,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         present(informationPostingViewController, animated: true, completion: nil)
     }
     
-    func showLogoutFailure(message: String) {
-        let alertVC = UIAlertController(title: "Logout Failed", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
+    func showFailure(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
 }

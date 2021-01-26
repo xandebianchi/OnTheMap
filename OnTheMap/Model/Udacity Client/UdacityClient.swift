@@ -53,9 +53,6 @@ class UdacityClient {
                 }
                 return
             }
-            if error != nil { // Handle error…
-                return
-            }
             var newData = data
             if removeFirstCharacters {
                 let range = 5..<data.count
@@ -63,14 +60,13 @@ class UdacityClient {
             }
             let decoder = JSONDecoder()
             do {
-                print(String(data: newData, encoding: .utf8))
                 let responseObject = try decoder.decode(ResponseType.self, from: newData)
                 DispatchQueue.main.async {
                     completion(responseObject, nil)
                 }
             } catch {
                 DispatchQueue.main.async {
-                    completion(nil, AppError(message: "Invalid Response."))
+                    completion(nil, error)
                 }
             }
         }
@@ -108,7 +104,7 @@ class UdacityClient {
                     }
                 } catch {
                     DispatchQueue.main.async {
-                        completion(nil, AppError(message: "Invalid Response."))
+                        completion(nil, AppError(message: "It was not possible to save the information. Try again."))
                     }
                 }
             }
@@ -139,13 +135,13 @@ class UdacityClient {
             print(String(data: newData, encoding: .utf8)!)/* subset response data! */
             let decoder = JSONDecoder()
             do {
-                let responseObject = try decoder.decode(ResponseType.self, from: newData)
-                DispatchQueue.main.async {
-                    completion(responseObject, nil)
-                }
+                /*let responseObject = */try decoder.decode(ResponseType.self, from: newData)
+                //DispatchQueue.main.async {
+               //     completion(responseObject, nil)
+               // }
             } catch {
                 DispatchQueue.main.async {
-                    completion(nil, AppError(message: "Invalid Response."))
+                    completion(nil, AppError(message: "It was not possible to logout. Try again."))
                 }
             }
         }
@@ -166,8 +162,8 @@ class UdacityClient {
     }
     
     class func logout(completion: @escaping (Bool, Error?) -> Void) {
-        taskForDELETERequest(url: Endpoints.logout.url, response: LogoutResponse.self) { (response, error) in
-            if let response = response {
+        taskForDELETERequest(url: Endpoints.logout.url, response: LogoutResponse.self) { (_, error) in
+            if error != nil {
                 completion(true, nil)
             } else {
                 completion(false, error)
@@ -180,7 +176,7 @@ class UdacityClient {
             if let response = response {
                 completion(response.results, nil)
             } else {
-                completion([], error)
+                completion([], AppError(message: "It was not possible to get Student Locations! Click in Refresh Button on top right to try again!"))
             }
         }
     }

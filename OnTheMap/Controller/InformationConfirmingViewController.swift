@@ -91,16 +91,26 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
         if error == nil {
             UdacityClient.postStudentLocation(firstName: firstName!, lastName: lastName!, mapString: self.mapString, mediaURL: self.mediaURL, latitude: self.latitude, longitude: self.longitude, completion: handlePostStudentResponse(success:error:))
         } else {
-            // Handle error
+            showFailure(title: "Not Possible to Get User Information", message: error?.localizedDescription ?? "")
         }
     }
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
-        if success {
-            dismiss(animated: true, completion: nil)
-        } else {
-            //showLoginFailure(message: error?.localizedDescription ?? "")
-        }
+     //   if success {
+       //     dismiss(animated: true, completion: nil)
+      //  } else {
+            showFailure(title: "Not Possible to Save Information", message: error?.localizedDescription ?? "")
+       // }
+    }
+    
+    @IBAction func backButtonAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func showFailure(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
 }
