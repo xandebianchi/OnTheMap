@@ -7,15 +7,10 @@
 
 import Foundation
 
-// MARK: - Welcome
-struct UserDataResponse: Codable {
-    let user: User
-}
-
-// MARK: - User
-struct User: Codable {
-    let firstName: String?
-    let lastName: String?
+// MARK: - UserResponse
+struct UserResponse: Codable {
+    let firstName: String
+    let lastName: String
 
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"

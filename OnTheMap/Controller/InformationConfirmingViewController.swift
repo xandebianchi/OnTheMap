@@ -13,6 +13,7 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var finishButton: UIButton!
     
+    private var presentingController: UIViewController?
     var latitude: Float = 0.0
     var longitude: Float = 0.0
     var mapString: String = ""
@@ -20,6 +21,11 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         showMapAnnotation()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presentingController = presentingViewController
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -96,15 +102,17 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     }
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
-     //   if success {
-       //     dismiss(animated: true, completion: nil)
-      //  } else {
+        if success {
+            dismiss(animated: true, completion: nil)
+        } else {
             showFailure(title: "Not Possible to Save Information", message: error?.localizedDescription ?? "")
-       // }
+        }
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.presentingController?.dismiss(animated: false)
+        })
     }
     
     func showFailure(title: String, message: String) {

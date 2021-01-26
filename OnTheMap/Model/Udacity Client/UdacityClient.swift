@@ -75,7 +75,7 @@ class UdacityClient {
         return task
     }
     
-    class func taskForPOSTRequest<RequestType: Encodable, ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, body: RequestType, completion: @escaping (ResponseType?, Error?) -> Void) {
+    class func taskForPOSTRequest<RequestType: Encodable, ResponseType: Decodable>(url: URL, removeFirstCharacters: Bool, responseType: ResponseType.Type, body: RequestType, completion: @escaping (ResponseType?, Error?) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -88,8 +88,11 @@ class UdacityClient {
                 }
                 return
             }
-            let range = 5..<data.count
-            let newData = data.subdata(in: range) /* subset response data! */
+            var newData = data
+            if removeFirstCharacters {
+                let range = 5..<data.count
+                newData = newData.subdata(in: range) /* subset response data! */
+            }
             let decoder = JSONDecoder()
             do {
                 let responseObject = try decoder.decode(ResponseType.self, from: newData)
@@ -151,7 +154,7 @@ class UdacityClient {
     }
     
     class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
-        taskForPOSTRequest(url: Endpoints.login.url, responseType: LoginResponse.self, body: LoginRequest(username: username, password: password)) { (response, error) in
+        taskForPOSTRequest(url: Endpoints.login.url, removeFirstCharacters: true, responseType: LoginResponse.self, body: LoginRequest(username: username, password: password)) { (response, error) in
             if let response = response {
                 Endpoints.Auth.uniqueKey = response.account.key
                 completion(response.account.registered, nil)
@@ -182,7 +185,7 @@ class UdacityClient {
     }
     
     class func postStudentLocation(firstName: String, lastName: String, mapString: String, mediaURL: String, latitude: Float, longitude: Float, completion: @escaping (Bool, Error?) -> Void) {
-        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, responseType: PostLocationResponse.self, body: PostLocationRequest(uniqueKey: Endpoints.Auth.uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)) { (response, error) in
+        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, removeFirstCharacters: false, responseType: PostLocationResponse.self, body: PostLocationRequest(uniqueKey: Endpoints.Auth.uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)) { (response, error) in
             if let response = response {
                 completion(true, nil)
             } else {
@@ -192,9 +195,9 @@ class UdacityClient {
     }
     
     class func getPublicUserData(completion: @escaping (String?, String?, Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getPublicUserData.url, removeFirstCharacters: true, response: UserDataResponse.self) { (response, error) in
+        taskForGETRequest(url: Endpoints.getPublicUserData.url, removeFirstCharacters: true, response: UserResponse.self) { (response, error) in
             if let response = response {
-                completion(response.user.firstName, response.user.lastName, nil)
+                completion(response.firstName, response.lastName, nil)
             } else {
                 completion(nil, nil, error)
             }
