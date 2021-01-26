@@ -18,6 +18,7 @@ class UdacityClient {
         
         case getUdacitySignUpPage
         case login
+        case logout
         case getStudentLocations
         case postStudentLocation
         case getPublicUserData
@@ -34,6 +35,8 @@ class UdacityClient {
                 return Endpoints.base + "/StudentLocation"
             case .getPublicUserData:
                 return Endpoints.base + "/users/\(Auth.uniqueKey)"
+            case .logout:
+                return Endpoints.base + "/session"
             }
         }
         
@@ -42,7 +45,7 @@ class UdacityClient {
         }
     }
     
-    class func taskForGETRequest<ResponseType: Decodable>(url: URL, response: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
+    class func taskForGETRequest<ResponseType: Decodable>(url: URL, removeFirstCharacters: Bool, response: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -53,9 +56,15 @@ class UdacityClient {
             if error != nil { // Handle error…
                 return
             }
+            var newData = data
+            if removeFirstCharacters {
+                let range = 5..<data.count
+                newData = newData.subdata(in: range) /* subset response data! */
+            }
             let decoder = JSONDecoder()
             do {
-                let responseObject = try decoder.decode(ResponseType.self, from: data)
+                print(String(data: newData, encoding: .utf8))
+                let responseObject = try decoder.decode(ResponseType.self, from: newData)
                 DispatchQueue.main.async {
                     completion(responseObject, nil)
                 }
@@ -83,12 +92,51 @@ class UdacityClient {
                 }
                 return
             }
-            if error != nil { // Handle error…
+            let range = 5..<data.count
+            let newData = data.subdata(in: range) /* subset response data! */
+            let decoder = JSONDecoder()
+            do {
+                let responseObject = try decoder.decode(ResponseType.self, from: newData)
+                DispatchQueue.main.async {
+                    completion(responseObject, nil)
+                }
+            } catch {
+                do {
+                    let errorResponse = try decoder.decode(UdacityErrorResponse.self, from: newData)
+                    DispatchQueue.main.async {
+                        completion(nil, errorResponse)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(nil, AppError(message: "Invalid Response."))
+                    }
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    class func taskForDELETERequest<ResponseType: Decodable>(url: URL, response: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        for cookie in sharedCookieStorage.cookies! {
+          if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+          request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
                 return
             }
             let range = 5..<data.count
-            let newData = data.subdata(in: range) /* subset response data! */
-            print(String(data: newData, encoding: .utf8)!)
+            let newData = data.subdata(in: range)
+            print(String(data: newData, encoding: .utf8)!)/* subset response data! */
             let decoder = JSONDecoder()
             do {
                 let responseObject = try decoder.decode(ResponseType.self, from: newData)
@@ -102,6 +150,8 @@ class UdacityClient {
             }
         }
         task.resume()
+        
+        return task
     }
     
     class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
@@ -115,8 +165,18 @@ class UdacityClient {
         }
     }
     
+    class func logout(completion: @escaping (Bool, Error?) -> Void) {
+        taskForDELETERequest(url: Endpoints.logout.url, response: LogoutResponse.self) { (response, error) in
+            if let response = response {
+                completion(true, nil)
+            } else {
+                completion(false, error)
+            }
+        }
+    }
+    
     class func getStudentLocations(completion: @escaping ([StudentLocation], Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getStudentLocations.url, response: StudentLocationResults.self) { (response, error) in
+        taskForGETRequest(url: Endpoints.getStudentLocations.url, removeFirstCharacters: false, response: StudentLocationResults.self) { (response, error) in
             if let response = response {
                 completion(response.results, nil)
             } else {
@@ -136,7 +196,7 @@ class UdacityClient {
     }
     
     class func getPublicUserData(completion: @escaping (String?, String?, Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getPublicUserData.url, response: UserDataResponse.self) { (response, error) in
+        taskForGETRequest(url: Endpoints.getPublicUserData.url, removeFirstCharacters: true, response: UserDataResponse.self) { (response, error) in
             if let response = response {
                 completion(response.user.firstName, response.user.lastName, nil)
             } else {

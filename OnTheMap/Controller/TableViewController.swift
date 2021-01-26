@@ -8,10 +8,8 @@
 import UIKit
 
 class StudentLocationTableViewCell: UITableViewCell {
-    
     @IBOutlet weak var studentName: UILabel!
     @IBOutlet weak var studentURL: UILabel!
-    
 }
 
 class TableViewController: UITableViewController {
@@ -68,11 +66,37 @@ class TableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let currentCell = tableView.cellForRow(at: indexPath) as! StudentLocationTableViewCell
+        let app = UIApplication.shared
+        if let toOpen = currentCell.studentURL?.text! {
+            app.open(URL(string: toOpen)!, options: [:], completionHandler: nil)
+        }
+    }
+    
     // MARK: - Actions
+    
+    @IBAction func logoutButtonAction(_ sender: Any) {
+        UdacityClient.logout(completion: handleLogoutResponse(success:error:))
+    }
+    
+    func handleLogoutResponse(success: Bool, error: Error?) {
+        if success {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            showLogoutFailure(message: "It was not possible to do logout!")
+        }
+    }
     
     @IBAction func refreshButtonAction(_ sender: Any) {
         refreshButton.isEnabled = false
         UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
+    }
+    
+    func showLogoutFailure(message: String) {
+        let alertVC = UIAlertController(title: "Logout Failed", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        show(alertVC, sender: nil)
     }
 
 }

@@ -196,7 +196,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="On The Map" id="oyh-e4-rtR">
-                        <barButtonItem key="leftBarButtonItem" title="LOGOUT" id="Rl0-xQ-EWL"/>
+                        <barButtonItem key="leftBarButtonItem" title="LOGOUT" id="Rl0-xQ-EWL">
+                            <connections>
+                                <action selector="logoutButtonAction:" destination="Zdk-eo-mH3" id="BZ0-6s-p9H"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem image="icon_addpin" id="der-MG-QfJ" userLabel="Add Location Button">
                                 <connections>
@@ -277,7 +281,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="Oj1-cf-137">
-                        <barButtonItem key="leftBarButtonItem" title="LOGOUT" id="Z2z-dy-E2g"/>
+                        <barButtonItem key="leftBarButtonItem" title="LOGOUT" id="Z2z-dy-E2g">
+                            <connections>
+                                <action selector="logoutButtonAction:" destination="UGl-nr-DC8" id="3KZ-v4-QUi"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem image="icon_addpin" id="PAF-M4-vFA" userLabel="Add Location Button">
                                 <connections>
@@ -442,7 +450,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3zw-t1-RLE"/>
+        <segue reference="1e4-Jg-5Rk"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="icon_addpin" width="24" height="24"/>

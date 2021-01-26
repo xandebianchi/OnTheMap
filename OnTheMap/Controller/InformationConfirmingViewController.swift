@@ -48,7 +48,7 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
         // Here we create the annotation and set its coordiate, title, and subtitle properties
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
-        annotation.title = "Teste"
+        annotation.title = self.mapString
         //annotation.subtitle = mediaURL
         
         // Finally we place the annotation in an array of annotations.

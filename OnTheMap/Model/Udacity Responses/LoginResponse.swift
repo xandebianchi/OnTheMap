@@ -9,7 +9,7 @@ import Foundation
 
 struct LoginResponse: Codable {
     let account: Account
-    let session: Session
+    let session: LoginSession
 }
 
 struct Account: Codable {
@@ -17,7 +17,7 @@ struct Account: Codable {
     let key: String
 }
 
-struct Session: Codable {
+struct LoginSession: Codable {
     let id: String
     let expiration: String
 }

@@ -114,15 +114,32 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    @IBAction func logoutButtonAction(_ sender: Any) {
+        UdacityClient.logout(completion: handleLogoutResponse(success:error:))
+    }
+    
+    func handleLogoutResponse(success: Bool, error: Error?) {
+        if success {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            showLogoutFailure(message: "It was not possible to do logout!")
+        }
+    }
+    
     @IBAction func refreshButtonAction(_ sender: Any) {
         refreshButton.isEnabled = false
         UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
     }
     
-    
     @IBAction func addLocationButtonAction(_ sender: Any) {
         let informationPostingViewController = storyboard?.instantiateViewController(withIdentifier: "InformationPostingViewController") as! InformationPostingViewController
         present(informationPostingViewController, animated: true, completion: nil)
+    }
+    
+    func showLogoutFailure(message: String) {
+        let alertVC = UIAlertController(title: "Logout Failed", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        show(alertVC, sender: nil)
     }
     
 }
