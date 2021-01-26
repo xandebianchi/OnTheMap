@@ -103,16 +103,16 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
         if success {
-            dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: {
+                self.presentingController?.dismiss(animated: false, completion: nil)
+            })
         } else {
             showFailure(title: "Not Possible to Save Information", message: error?.localizedDescription ?? "")
         }
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: {
-            self.presentingController?.dismiss(animated: false)
-        })
+        self.dismiss(animated: true, completion: nil)
     }
     
     func showFailure(title: String, message: String) {
