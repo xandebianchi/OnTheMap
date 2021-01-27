@@ -103,8 +103,9 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
         if success {
+            self.presentingController?.view.isHidden = true
             self.dismiss(animated: true, completion: {
-                self.presentingController?.dismiss(animated: false, completion: nil)
+                self.presentingController?.dismiss(animated: false)
             })
         } else {
             showFailure(title: "Not Possible to Save Information", message: error?.localizedDescription ?? "")

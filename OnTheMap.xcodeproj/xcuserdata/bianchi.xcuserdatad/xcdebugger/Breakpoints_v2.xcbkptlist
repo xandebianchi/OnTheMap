@@ -711,17 +711,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6D5BB32D-63BF-431E-A983-00631C629929"
+            uuid = "CAA58A5E-DBF8-4186-AE13-AB8A9F15737D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "OnTheMap/Controller/InformationConfirmingViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
-            landmarkName = "viewDidAppear(_:)"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "handlePostStudentResponse(success:error:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CAA58A5E-DBF8-4186-AE13-AB8A9F15737D - c9db61ebba217c73"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OnTheMap.InformationConfirmingViewController.handlePostStudentResponse(success: Swift.Bool, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "OnTheMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/bianchi/Documents/Projects/OnTheMap/OnTheMap/Controller/InformationConfirmingViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "106"
+                  endingLineNumber = "106"
+                  offsetFromSymbolStart = "188">
+               </Location>
+               <Location
+                  uuid = "CAA58A5E-DBF8-4186-AE13-AB8A9F15737D - 792e3ed173680441"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in OnTheMap.InformationConfirmingViewController.handlePostStudentResponse(success: Swift.Bool, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "OnTheMap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/bianchi/Documents/Projects/OnTheMap/OnTheMap/Controller/InformationConfirmingViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "107"
+                  endingLineNumber = "107"
+                  offsetFromSymbolStart = "41">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
