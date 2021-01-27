@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreLocation
+import Foundation
 
 class InformationPostingViewController: UIViewController {
     
@@ -16,6 +17,7 @@ class InformationPostingViewController: UIViewController {
     @IBOutlet weak var stackViewCentral: UIStackView!
     @IBOutlet weak var imageAddLocation: UIImageView!
 
+    private var presentingController: UIViewController?
     var geocoder = CLGeocoder()
     var latitude: Float = 0.0
     var longitude: Float = 0.0
@@ -24,6 +26,11 @@ class InformationPostingViewController: UIViewController {
         locationTextField.becomeFirstResponder()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presentingController = presentingViewController
+    }
+       
     @IBAction func findLocationButtonAction(_ sender: Any) {
         if locationTextField.text!.isEmpty || urlTextField.text!.isEmpty {
             showFailure(title: "Information Missing", message: "Please fill the location and the link or information associated.")

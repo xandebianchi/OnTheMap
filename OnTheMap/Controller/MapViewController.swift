@@ -27,12 +27,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     // Add it to the studentLocations array in the Application Delegate
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
     }
-    
+        
     func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
         refreshButton.isEnabled = true
         
