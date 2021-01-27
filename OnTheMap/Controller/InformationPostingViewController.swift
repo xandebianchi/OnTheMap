@@ -43,12 +43,12 @@ class InformationPostingViewController: UIViewController {
     }
         
     private func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
-        if let error = error {
+        if error != nil {
             setIndicator(false)
             showFailure(title: "Location Do Not Exist", message: "The informed location doesn't exist.")
         } else {
             if let placemarks = placemarks, placemarks.count > 0 {
-                let location = placemarks.first?.location as! CLLocation
+                let location = (placemarks.first?.location)! as CLLocation
 
                 let coordinate = location.coordinate
                 

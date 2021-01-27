@@ -62,7 +62,7 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H58-8H-fHH" userLabel="Sign Up Question">
-                                <rect key="frame" x="66.333333333333329" y="529" width="242.66666666666669" height="21.666666666666629"/>
+                                <rect key="frame" x="68.666666666666671" y="529" width="237.66666666666663" height="21.666666666666629"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RXm-Pd-7QU">
                                         <rect key="frame" x="0.0" y="0.0" width="178.66666666666666" height="21.666666666666668"/>
@@ -71,10 +71,9 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WCF-UC-cLS">
-                                        <rect key="frame" x="177.66666666666669" y="0.66666666666662877" width="65" height="20"/>
+                                        <rect key="frame" x="183.66666666666669" y="0.66666666666662877" width="54" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="209-3t-9BJ"/>
-                                            <constraint firstAttribute="width" constant="65" id="lsb-bg-kmh"/>
                                         </constraints>
                                         <state key="normal" title="Sign Up"/>
                                         <connections>
@@ -85,7 +84,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="RXm-Pd-7QU" secondAttribute="bottom" id="Bpd-hm-E7S"/>
-                                    <constraint firstItem="WCF-UC-cLS" firstAttribute="leading" secondItem="RXm-Pd-7QU" secondAttribute="trailing" constant="-1" id="GXd-8d-8JP"/>
+                                    <constraint firstItem="WCF-UC-cLS" firstAttribute="leading" secondItem="RXm-Pd-7QU" secondAttribute="trailing" constant="5" id="GXd-8d-8JP"/>
                                     <constraint firstAttribute="trailing" secondItem="WCF-UC-cLS" secondAttribute="trailing" id="Q7X-T7-Imx"/>
                                     <constraint firstAttribute="bottom" secondItem="WCF-UC-cLS" secondAttribute="bottom" constant="1" id="TLk-8V-fLr"/>
                                     <constraint firstItem="RXm-Pd-7QU" firstAttribute="top" secondItem="H58-8H-fHH" secondAttribute="top" id="bEO-5o-5DN"/>
@@ -154,13 +153,16 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="82"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ShV-AT-shU" userLabel="Student Name">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ShV-AT-shU" userLabel="Student Name">
                                             <rect key="frame" x="84" y="16" width="271" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="ZLG-hn-Lxi"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hBV-Ef-vo3" userLabel="URL">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hBV-Ef-vo3" userLabel="URL">
                                             <rect key="frame" x="84" y="47" width="271" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <nil key="textColor"/>
@@ -334,7 +336,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="ALv-Ud-hem"/>
-                                            <constraint firstAttribute="width" constant="78" id="q9E-2N-tNy"/>
                                         </constraints>
                                     </imageView>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a location here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UBc-NN-7eX" userLabel="Location">
@@ -467,7 +468,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="1e4-Jg-5Rk"/>
+        <segue reference="3zw-t1-RLE"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="icon_back-arrow" width="24" height="24"/>
