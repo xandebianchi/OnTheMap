@@ -9,6 +9,8 @@ import Foundation
 
 class UdacityClient {
     
+    // MARK: - Declarations
+    
     enum Endpoints {
         static let base = "https://onthemap-api.udacity.com/v1"
         
@@ -44,6 +46,8 @@ class UdacityClient {
             return URL(string: stringValue)!
         }
     }
+    
+    // MARK: - Base REST methods
     
     class func taskForGETRequest<ResponseType: Decodable>(url: URL, removeFirstCharacters: Bool, response: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
@@ -115,7 +119,7 @@ class UdacityClient {
         task.resume()
     }
     
-    class func taskForDELETERequest<ResponseType: Decodable>(url: URL, response: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
+    class func taskForDELETERequest<ResponseType: Decodable>(url: URL, response: ResponseType.Type, completion: @escaping (Bool, Error?) -> Void) -> URLSessionTask {
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         var xsrfCookie: HTTPCookie? = nil
@@ -129,22 +133,21 @@ class UdacityClient {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else {
                 DispatchQueue.main.async {
-                    completion(nil, error)
+                    completion(false, error)
                 }
                 return
             }
             let range = 5..<data.count
             let newData = data.subdata(in: range)
-            print(String(data: newData, encoding: .utf8)!)/* subset response data! */
             let decoder = JSONDecoder()
             do {
-                /*let responseObject = */try decoder.decode(ResponseType.self, from: newData)
-                //DispatchQueue.main.async {
-               //     completion(responseObject, nil)
-               // }
+                _ = try decoder.decode(ResponseType.self, from: newData)
+                DispatchQueue.main.async {
+                    completion(true, nil)
+                }
             } catch {
                 DispatchQueue.main.async {
-                    completion(nil, AppError(message: "It was not possible to logout. Try again."))
+                    completion(false, AppError(message: "It was not possible to logout. Try again."))
                 }
             }
         }
@@ -152,6 +155,8 @@ class UdacityClient {
         
         return task
     }
+    
+    // MARK: - Network calls
     
     class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
         taskForPOSTRequest(url: Endpoints.login.url, removeFirstCharacters: true, responseType: LoginResponse.self, body: LoginRequest(username: username, password: password)) { (response, error) in
@@ -165,32 +170,24 @@ class UdacityClient {
     }
     
     class func logout(completion: @escaping (Bool, Error?) -> Void) {
-        taskForDELETERequest(url: Endpoints.logout.url, response: LogoutResponse.self) { (_, error) in
-            if error != nil {
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
+        taskForDELETERequest(url: Endpoints.logout.url, response: LogoutResponse.self) { (response, error) in
+            completion(response, error)
         }
     }
     
     class func getStudentLocations(completion: @escaping ([StudentLocation], Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.getStudentLocations.url, removeFirstCharacters: false, response: StudentLocationResults.self) { (response, error) in
+        taskForGETRequest(url: Endpoints.getStudentLocations.url, removeFirstCharacters: false, response: StudentLocationResults.self) { (response, _) in
             if let response = response {
                 completion(response.results, nil)
             } else {
-                completion([], AppError(message: "It was not possible to get Student Locations! Click in Refresh Button on top right to try again!"))
+                completion([], AppError(message: "It was not possible to get Student Locations! Click in Refresh Button on the left button on screen top right to try again!"))
             }
         }
     }
     
     class func postStudentLocation(firstName: String, lastName: String, mapString: String, mediaURL: String, latitude: Float, longitude: Float, completion: @escaping (Bool, Error?) -> Void) {
-        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, removeFirstCharacters: false, responseType: PostLocationResponse.self, body: PostLocationRequest(uniqueKey: Endpoints.Auth.uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)) { (response, error) in
-            if let response = response {
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
+        taskForPOSTRequest(url: Endpoints.postStudentLocation.url, removeFirstCharacters: false, responseType: PostLocationResponse.self, body: PostLocationRequest(uniqueKey: Endpoints.Auth.uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)) { (_, error) in
+            completion(error == nil, error)
         }
     }
     

@@ -10,14 +10,20 @@ import MapKit
 
 class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     
+    // MARK: - UI Controls
+    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var finishButton: UIButton!
+    
+    // MARK: - Properties
     
     private var presentingController: UIViewController?
     var latitude: Float = 0.0
     var longitude: Float = 0.0
     var mapString: String = ""
     var mediaURL: String = ""
+    
+    // MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         showMapAnnotation()
@@ -34,43 +40,9 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
             self.mapView.alpha = 1.0
         })
     }
-    
-    func showMapAnnotation() {
-        // We will create an MKPointAnnotation for each dictionary in "locations". The
-        // point annotations will be stored in this array, and then provided to the map view.
-        // TODO Change explanation
-        //var annotations = [MKPointAnnotation]()
-               
-        let latitude = CLLocationDegrees(self.latitude)
-        let longitude = CLLocationDegrees(self.longitude)
         
-        // The lat and long are used to create a CLLocationCoordinates2D instance.
-        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        
-        //let firstName = location.firstName // as! String
-        //let lastName = location.lastName // as! String
-       // let mediaURL = location.mediaURL // as! String
-        
-        // Here we create the annotation and set its coordiate, title, and subtitle properties
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        annotation.title = self.mapString
-        //annotation.subtitle = mediaURL
-        
-        // Finally we place the annotation in an array of annotations.
-       // annotations.append(annotation)
-        
-        // When the array is complete, we add the annotations to the map.
-        mapView.addAnnotation(annotation)
-        
-        mapView.selectAnnotation(annotation, animated: true)
-    }
-    
     // MARK: - MKMapViewDelegate
 
-    // Here we create a view with a "right callout accessory view". You might choose to look into other
-    // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
-    // method in TableViewDataSource.
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         
@@ -80,17 +52,32 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
             pinView!.pinTintColor = .red
-            //pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        else {
+        } else {
             pinView!.annotation = annotation
         }
         
         return pinView
     }
     
+    // MARK: - Actions
+    
     @IBAction func finishButtonAction(_ sender: Any) {
         UdacityClient.getPublicUserData(completion: handlePublicUserData(firstName:lastName:error:))
+    }
+    
+    // MARK: - Main methods
+    
+    func showMapAnnotation() {
+        let latitude = CLLocationDegrees(self.latitude)
+        let longitude = CLLocationDegrees(self.longitude)
+        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = self.mapString
+
+        mapView.addAnnotation(annotation)
+        mapView.selectAnnotation(annotation, animated: true)
     }
     
     func handlePublicUserData(firstName: String?, lastName: String?, error: Error?) {
@@ -103,17 +90,10 @@ class InformationConfirmingViewController: UIViewController, MKMapViewDelegate {
     
     func handlePostStudentResponse(success: Bool, error: Error?) {
         if success {
-            self.presentingController?.view.isHidden = true
-            self.dismiss(animated: true, completion: {
-                self.presentingController?.dismiss(animated: false)
-            })
+            self.navigationController?.dismiss(animated: true, completion: nil)
         } else {
             showFailure(title: "Not Possible to Save Information", message: error?.localizedDescription ?? "")
         }
-    }
-    
-    @IBAction func backButtonAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
     }
     
     func showFailure(title: String, message: String) {

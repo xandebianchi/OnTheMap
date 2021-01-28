@@ -9,10 +9,14 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    // MARK: - UIControls
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    // MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +24,8 @@ class LoginViewController: UIViewController {
         emailTextField.text = "alexandre.bianchi@ab-inbev.com"
         passwordTextField.text = "3Bossan3!@#"
     }
+    
+    // MARK: - Actions
 
     @IBAction func signUpTapped(_ sender: Any) {
         UIApplication.shared.open(UdacityClient.Endpoints.getUdacitySignUpPage.url, options: [:], completionHandler: nil)
@@ -29,6 +35,8 @@ class LoginViewController: UIViewController {
         setLoggingIn(true)
         UdacityClient.login(username: self.emailTextField.text ?? "", password: self.passwordTextField.text ?? "", completion: handleLoginResponse(success:error:))
     }
+    
+    // MARK: - Main methods
     
     func handleLoginResponse(success: Bool, error: Error?) {
         setLoggingIn(false)
@@ -57,4 +65,3 @@ class LoginViewController: UIViewController {
     }
     
 }
-

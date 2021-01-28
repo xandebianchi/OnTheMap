@@ -11,25 +11,29 @@ import Foundation
 
 class InformationPostingViewController: UIViewController {
     
+    // MARK: - UI Controls
+    
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var stackViewCentral: UIStackView!
     @IBOutlet weak var imageAddLocation: UIImageView!
 
+    // MARK: - Properties
+    
     private var presentingController: UIViewController?
     var geocoder = CLGeocoder()
     var latitude: Float = 0.0
     var longitude: Float = 0.0
     
-    override func viewDidLoad() {
-        locationTextField.becomeFirstResponder()
-    }
+    // MARK: - Lifecycle methods
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presentingController = presentingViewController
     }
+    
+    // MARK: - Actions
        
     @IBAction func findLocationButtonAction(_ sender: Any) {
         if locationTextField.text!.isEmpty || urlTextField.text!.isEmpty {
@@ -41,8 +45,14 @@ class InformationPostingViewController: UIViewController {
             }
         }
     }
-        
-    private func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
+    
+    @IBAction func cancelButtonAction(_ sender: Any) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Main methods
+    
+    func processResponse(withPlacemarks placemarks: [CLPlacemark]?, error: Error?) {
         if error != nil {
             setIndicator(false)
             showFailure(title: "Location Do Not Exist", message: "The informed location doesn't exist.")
@@ -54,16 +64,25 @@ class InformationPostingViewController: UIViewController {
                 
                 self.latitude = Float(coordinate.latitude)
                 self.longitude = Float(coordinate.longitude)
-                print("Coordinates: \(coordinate.latitude), \(coordinate.longitude)")
                                 
                 setIndicator(false)
-                
-                performSegue(withIdentifier: "goToConfirmingSegue", sender: self)
+                            
+                goToConfirmingScreen()
             } else {
                 setIndicator(false)
                 showFailure(title: "Location Not Well Specified", message: "Try to use the full location name (Ex: California, USA).")
             }
         }
+    }
+    
+    func goToConfirmingScreen() {
+        let informationConfirmingViewController = self.storyboard!.instantiateViewController(withIdentifier: "InformationConfirmingViewController") as! InformationConfirmingViewController
+        informationConfirmingViewController.latitude = self.latitude
+        informationConfirmingViewController.longitude = self.longitude
+        informationConfirmingViewController.mapString = self.locationTextField.text!
+        informationConfirmingViewController.mediaURL = self.urlTextField.text!
+        informationConfirmingViewController.navigationItem.title = "Add Location"
+        self.navigationController?.pushViewController(informationConfirmingViewController, animated: true)
     }
     
     func setIndicator(_ isFinding: Bool) {
@@ -72,15 +91,6 @@ class InformationPostingViewController: UIViewController {
         } else {
             activityIndicator.stopAnimating()
         }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let informationConfirmingViewController = segue.destination as! InformationConfirmingViewController
-
-        informationConfirmingViewController.latitude = self.latitude
-        informationConfirmingViewController.longitude = self.longitude
-        informationConfirmingViewController.mapString = self.locationTextField.text!
-        informationConfirmingViewController.mediaURL = self.urlTextField.text!
     }
                 
     func showFailure(title: String, message: String) {

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - Student Location Tabel View Custom Cell
+
 class StudentLocationTableViewCell: UITableViewCell {
     @IBOutlet weak var studentName: UILabel!
     @IBOutlet weak var studentURL: UILabel!
@@ -14,11 +16,24 @@ class StudentLocationTableViewCell: UITableViewCell {
 
 class TableViewController: UITableViewController {
     
+    // MARK: - UI Controls
+    
     @IBOutlet weak var refreshButton: UIBarButtonItem!
+    
+    // MARK: - Properties
     
     // Add it to the studentLocations array in the Application Delegate
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
+    // MARK: - Lifecycle methods
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
+    }
+    
+    // MARK: - TableView methods
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of prompts in the storyNode (The 2 is just a place holder)
         return appDelegate.studentLocations.count
@@ -45,6 +60,13 @@ class TableViewController: UITableViewController {
     @IBAction func logoutButtonAction(_ sender: Any) {
         UdacityClient.logout(completion: handleLogoutResponse(success:error:))
     }
+        
+    @IBAction func refreshButtonAction(_ sender: Any) {
+        refreshButton.isEnabled = false
+        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
+    }
+    
+    // MARK: - Main methods
     
     func handleLogoutResponse(success: Bool, error: Error?) {
         if success {
@@ -52,11 +74,6 @@ class TableViewController: UITableViewController {
         } else {
             showFailure(title: "Logout Failed", message: "It was not possible to do logout!")
         }
-    }
-    
-    @IBAction func refreshButtonAction(_ sender: Any) {
-        refreshButton.isEnabled = false
-        UdacityClient.getStudentLocations(completion: handleStudentLocationsResponse(locations:error:))
     }
     
     func handleStudentLocationsResponse(locations: [StudentLocation], error: Error?) {
