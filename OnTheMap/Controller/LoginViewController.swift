@@ -15,16 +15,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
-    // MARK: - Lifecycle methods
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
-        emailTextField.text = "alexandre.bianchi@ab-inbev.com"
-        passwordTextField.text = "3Bossan3!@#"
-    }
-    
     // MARK: - Actions
 
     @IBAction func signUpTapped(_ sender: Any) {
