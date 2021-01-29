@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import Foundation
 
-class InformationPostingViewController: UIViewController {
+class InformationPostingViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - UI Controls
     
@@ -18,24 +18,39 @@ class InformationPostingViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var stackViewCentral: UIStackView!
     @IBOutlet weak var imageAddLocation: UIImageView!
-
+    @IBOutlet weak var findLocationButton: UIButton!
+    
     // MARK: - Properties
     
     private var presentingController: UIViewController?
     var geocoder = CLGeocoder()
     var latitude: Float = 0.0
     var longitude: Float = 0.0
+    var keyboardIsVisible = false
     
     // MARK: - Lifecycle methods
+        
+    override func viewDidLoad() {
+        locationTextField.delegate = self
+        urlTextField.delegate = self
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presentingController = presentingViewController
+        
+        subscribeToKeyboardNotifications()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromKeyboardNotifications()
     }
     
     // MARK: - Actions
        
     @IBAction func findLocationButtonAction(_ sender: Any) {
+        view.endEditing(true)
         if locationTextField.text!.isEmpty || urlTextField.text!.isEmpty {
             showFailure(title: "Information Missing", message: "Please fill the location and the link or information associated.")
         } else {
@@ -48,6 +63,53 @@ class InformationPostingViewController: UIViewController {
     
     @IBAction func cancelButtonAction(_ sender: Any) {
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Functions related to keyboard presentation
+    
+    // Function called when keyboard must be shown and the screen must be moved up
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if !keyboardIsVisible {
+            if locationTextField.isEditing {
+                view.frame.origin.y -= getKeyboardHeight(notification) - 50 - urlTextField.frame.height - findLocationButton.frame.height
+            } else if urlTextField.isEditing {
+                view.frame.origin.y -= getKeyboardHeight(notification) - 50 - findLocationButton.frame.height
+            }
+            keyboardIsVisible = true
+        }
+    }
+    
+    // Function called when screen must be moved down
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if keyboardIsVisible {
+            view.frame.origin.y = 0
+            keyboardIsVisible = false
+        }
+    }
+    
+    // Get keyboard size for move the screen
+    func getKeyboardHeight(_ notification:Notification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.cgRectValue.height
+    }
+    
+    // MARK: - Subscribe and unsubscribe from keyboard notifications
+    
+    func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    func unsubscribeFromKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Text field delegate functions
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
     }
     
     // MARK: - Main methods

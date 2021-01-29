@@ -403,6 +403,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="CEW-ZE-Bwf" id="JQi-Jt-Nos"/>
+                        <outlet property="findLocationButton" destination="duh-Us-s3u" id="Wek-rr-bob"/>
                         <outlet property="imageAddLocation" destination="qky-ET-CBf" id="tj9-ZB-VSd"/>
                         <outlet property="locationTextField" destination="UBc-NN-7eX" id="NvC-Am-6Qr"/>
                         <outlet property="stackViewCentral" destination="HOq-Xs-pRs" id="dCR-oL-g9F"/>
